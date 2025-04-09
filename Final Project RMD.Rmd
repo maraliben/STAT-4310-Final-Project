@@ -1,0 +1,17 @@
+---
+title: "Final Project RMD"
+author: "Marali Benitez, Youcef Djoudi, Kelly Thackery"
+date: "2025-04-09"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+##loading in packages
+library(wooldridge)
+library(AER)
+```
+
