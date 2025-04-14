@@ -13,5 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ##loading in packages
 library(wooldridge)
 library(AER)
+library(quantmod)
 ```
 
