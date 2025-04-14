@@ -15,11 +15,45 @@ library(wooldridge)
 library(AER)
 library(quantmod)
 
-#ceosal1 data
-ceosalary <- ceosal1
+#ceosal2 data
+ceosalary <- ceosal2
 
 #CPS 1988 data
 data("CPS1988")
 cps <- CPS1988
 ```
 
+**Data: ceosal2**
+
+**(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.   
+
+
+
+**(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
+
+
+
+**(c) Briefly discuss residuals**.  
+
+
+
+**(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
+
+
+
+
+**Data: CPS 1988**.   
+
+**(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.   
+
+
+
+**(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
+
+
+
+**(c) Briefly discuss residuals**.  
+
+
+
+**(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
