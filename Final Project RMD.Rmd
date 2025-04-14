@@ -30,9 +30,11 @@ cps <- CPS1988
 
 
 **(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
+```{r}
+model<- lm(profits ~. -lsalary -lsales, ceosalary)
+summary(model)
 
-
-
+```
 **(c) Briefly discuss residuals**.  
 
 
