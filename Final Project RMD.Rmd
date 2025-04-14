@@ -10,9 +10,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-##loading in packages
+##loading in packages and data
 library(wooldridge)
 library(AER)
 library(quantmod)
+
+#ceosal1 data
+ceosalary <- ceosal1
+
+#CPS 1988 data
+data("CPS1988")
+cps <- CPS1988
 ```
 
