@@ -1,6 +1,6 @@
 ---
 title: "Final Project RMD"
-author: "Marali Benitez, Youcef Djoudi, Kelly Thackery"
+author: "Marali Benitez, Youcef Djoudi, Kelly Thackery, Samina Issa, Samira Bechi"
 date: "2025-04-09"
 output: word_document
 ---
