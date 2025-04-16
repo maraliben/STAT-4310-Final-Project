@@ -19,9 +19,9 @@ library(PerformanceAnalytics)
 #ceosal2 data
 ceosalary <- ceosal2
 
-#CPS 1988 data
-data("CPS1988")
-cps <- CPS1988
+#Murder rates data
+data("MurderRates")
+mr <- MurderRates
 ```
 
 **Data: ceosal2**
@@ -50,22 +50,24 @@ summary(model)
 **(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.       
 
 ```{r}
-head(cps)
+head(mr)
 ```
 
-*The CPS 1988 data set describes the wages of men 18 to 70 (in dollars per week), number of years of education, number of years of potential work experience, ethnicity (a factor with levels "cauc" for caucasian or "afam" for african american), smsa (which is a factor that records if the individual resides in a Standard Metropolitan Statistical area, with 1 being yes and 0 being no), region (a factor with levels "northeast", "midwest", "south", and "west), and parttime (a factor that answers the question if the individual works parttime, with 1 being yes and 0 being no). We used wage as the response variable and the rest of the variables as predictor values. There are no missing or NA values in the dataset. *    
+*The murder rates data set contains data collected in 1950 that reflects 44 states' murder rate per 100,000 according to the FBI estimate, the convictions (which in this data set reflects the number of convictions divided by number of murders in 1950), the average number of executions from 1946-1950 divided by the number of convictions in 1950, the median time served in months of convicted murderers released in 1951, the median family income for the state in 1949 in thousands of dollars, the labor force participation rate for the state in 1950 (in percent), the proportion of the states population that is non-Caucasian in 1950, and southern, which indicates if the state is in the south or not. The response variable in this data would be the rate, while the other variables would be the predictors. There were no missing values in this data. *       
 
 
 
 **(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.      
 
 ```{r}
-#preliminary model
-cpsmodel <- lm(wage~., data = cps)
-summary(model)
+murdermodel <- lm(rate~., data = mr)
+summary(murdermodel)
+
+newmodel <- step(murdermodel, direction = "both", trace = 0)
+summary(newmodel)
 ```
 
-*The preliminary model summary shows that the linear model has an r^2 value of .8776, meaning that 87.76% of the variation in the data can be explained by the model. *
+*The preliminary *
 
 **(c) Briefly discuss residuals**.  
 
