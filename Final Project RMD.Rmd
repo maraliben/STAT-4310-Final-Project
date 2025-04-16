@@ -73,9 +73,20 @@ summary(murdermodel)
 
 ```{r}
 #taking out outliers
-newmurdermodel <- step(murdermodel, direction = "both", trace = 0)
+cooks <- cooks.distance(murdermodel)
+inf <- as.numeric(names(cooks)[cooks>(4/44)])
+newmurderdata <- mr[-inf,]
+
+#creating reduced model with no outliers in model
+newmurdermodel <- lm(rate~., data = newmurderdata)
 summary(newmurdermodel)
+
+#creating newer updated model using step function
+updatedmurdermodel <- step(newmurdermodel, direction = "both", trace = 0)
+summary(updatedmurdermodel)
 ```
+*After taking out the outliers, we can see that the R^2 value has increased to .8288, and the the S^2 value has gone down to 1.841. We then reduced the model using the step function, where we can see that the r^2 and s^2 did not change by much (the new r^2 value is .8234 and the new s^2 value is 1.814). The predictors for this model have been reduced to convictions, time, income, noncaucasian, and southern. More of the predictors are statistically significant in this model, with the intercept, convictions, noncaucasian, and southern all being statistically significant according to the p-value found by the t-tests. The f-test for this reduced model shows that it is nontrivial, as the p-value for the f-test is 7.059e-12.*    
+
 
 
 **(c) Briefly discuss residuals**.  
