@@ -9,7 +9,7 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, warning=FALSE}
 ##loading in packages and data
 library(wooldridge)
 library(AER)
@@ -59,3 +59,154 @@ summary(model)
 
 
 **(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
+
+## Finance Application  
+
+**Read stock prices for 5 different stocks. Close prices for 3 years, most recent 2024. Criteria Beta > 1, PE > 10, growth > 10%, different industries.**
+```{r}
+# Read stock prices
+start<- as.Date("2021-01-01")
+end<-as.Date("2024-01-01")
+DIS <- getSymbols("DIS", from=start, to=end, auto.assign=FALSE)
+NVDA <- getSymbols("NVDA", from=start, to=end, auto.assign=FALSE)
+CVNA<-getSymbols("CVNA", from=start, to=end, auto.assign=FALSE)
+SPOT<-getSymbols("SPOT", from=start, to=end, auto.assign=FALSE)
+DASH<-getSymbols("DASH", from=start, to=end, auto.assign=FALSE)
+
+
+## Closed price
+DIS.close <- DIS[ ,3]
+NVDA.close <- NVDA[ ,3]
+CVNA.close <- CVNA[ ,3]
+SPOT.close <- SPOT[ ,3]
+DASH.close <- SPOT[ ,3]
+
+## Returns
+DIS.return <- dailyReturn(DIS.close)
+NVDA.return <- dailyReturn(NVDA.close)
+CVNA.return <- dailyReturn(CVNA.close)
+SPOT.return <- dailyReturn(SPOT.close)
+DASH.return <- dailyReturn(DASH.close)
+
+
+```
+
+**Disney: beta(1.44), P/E(29.69), Growth Estimate(29.1), Industry: Entertainment    
+  Nvidia: beta(1.96), P/E(38.89), Growth Estimate(13.7%), Industry: Semiconductors    
+  Carvana: beta(3.62), P/E(138.64), Growth Estimate(65.9%), Industry: Auto & Truck Dealerships     Spotify: beta(1.75), P/E(90.03), Growth Estimate(23.1%), Industry: Internet Content & Information  
+  DoorDash: beta(1.69), P/E(627.07), Growth Estimate(36.8%), Industry: Communication Services**      
+        
+**(a)Plot close prices on three different plots. Notice the general "t????" "variation" on different spans.**  
+```{r, warning=FALSE}
+#Plot close stock prices on different plots.
+library(PerformanceAnalytics)
+plot(DIS.close, main = "Disney Closing Prices", type = "l", col = "blue", xlab = "Date", ylab = "Price")
+plot(NVDA.close, main = "NVIDIA Closing Prices", type = "l", col = "red", xlab = "Date", ylab = "Price")
+plot(CVNA.close, main = "Carvana Closing Prices", type = "l", col = "green", xlab = "Date", ylab = "Price")
+plot(SPOT.close, main = "Spotify Closing Prices", type = "l", col = "magenta", xlab = "Date", ylab = "Price")
+plot(DASH.close, main = "DoorDash Closing Prices", type = "l", col = "purple", xlab = "Date", ylab = "Price")
+```
+
+**Remark: There is significant drop for Disney early in 2022 and then remains volatile. NVidia has seen a steady rise witha few minor dips in last half of 2024. We see Carvana fall spring 2022 and doesn't start to rise again until spring 2024. **  
+
+**(b)Calculate annualized average return and annualized risk. Present the correlations matrix.**  
+```{r, warning=FALSE}
+library(PerformanceAnalytics)
+#Calculate the annualized return and annualized risk of each stock.
+## A function to compute the Annualized Expected return/Risk
+mu.sigma <- function(return){
+  mu.ann <- mean(return) * 252
+  sigma.ann <- sd(return) * sqrt(252)
+  return(c(mu.ann, sigma.ann))
+}
+
+## Annualized Expected Return and Annualized Risk
+dis <- mu.sigma(DIS.return)
+nvda <- mu.sigma(NVDA.return)
+cvna <- mu.sigma(CVNA.return)
+spot <- mu.sigma(SPOT.return)
+dash <- mu.sigma(DASH.return)
+
+
+cat('Disney:', dis, '\n')
+cat('NVIDIA:', nvda, '\n')
+cat('Carvana:', cvna, '\n')
+cat('Spoify:', spot, '\n')
+cat('DoorDash:', dash, '\n')
+
+
+## Correlation Matrix
+returns <- cbind(DIS.return,NVDA.return,CVNA.return,SPOT.return,DASH.return)
+colnames(returns) <- c('Disney', 'NVIDIA', 'Carvana', 'Spotify','DoorDash')
+head(returns)
+chart.Correlation(returns)
+```
+
+
+**Remark: **  
+
+**(c)Plot cumulative returns on one common plot.**  
+```{r, warning=FALSE}
+## Compute cumulative returns
+cumulative_returns <- cumprod(1 + returns)
+
+## Using chart.CumReturns from PerformanceAnalytics
+chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
+                 main = 'Cumulative Returns', colorset = c('blue', 'red','green','magenta','purple'))
+
+```
+
+**Remark: **  
+
+**(d)Estimate alpha, beta, Rsquare.**  
+```{r}
+## SP500(Benchmark)
+SP500<- getSymbols("^GSPC", from=start, to=end, auto.assign = FALSE)
+SP500.close <- SP500[ , 5]
+SP500.return<- dailyReturn(SP500.close)
+
+##Riskfree rates 
+rf <- read.csv(file.choose(), head=T, skip=3) # a data frame
+head(rf)
+rf$dates <- as.Date(rf$X, format="%Y%m%d") # create dates as X in the fama.french
+## sort ff according to dates 
+rf.new <- rf[rf$dates >= "2021-01-01" & rf$dates<= "2024-01-01", ] 
+head(rf.new)
+#dim(rf.new)
+#tail(rf.new)
+rf.new <- rf.new[ -754, ]
+#dim(rf.new)
+
+# Estimate alpha, beta, Rsquare of 3 stocks.
+beta <- function(stock.return, market.return, riskfree.rate) {
+    stock.excess <- stock.return - riskfree.rate
+    market.excess <- market.return - riskfree.rate
+    model <- lm(stock.excess ~ market.excess)
+    coefs <- coef(model)
+    Rsquare <- summary(model)$r.squared
+    results <- data.frame(alpha = coefs[1], beta = coefs[2], Rsquare = Rsquare)
+    return(results)
+}
+
+# Call beta function for each stock
+res_DIS   <- beta(DIS.return, SP500.return, rf.new$RF)
+res_NVDA  <- beta(NVDA.return, SP500.return, rf.new$RF)
+res_CVNA  <- beta(CVNA.return, SP500.return, rf.new$RF)
+res_SPOT  <- beta(SPOT.return, SP500.return, rf.new$RF)
+res_DASH  <- beta(DASH.return, SP500.return, rf.new$RF)
+
+# Combine the individual results into one table
+results_table <- rbind(Disney  = res_DIS, NVIDIA  = res_NVDA, Carvana = res_CVNA, 
+                       SPOT = res_SPOT, DASH = res_DASH)
+
+# Display the resulting table
+print(results_table)
+
+```
+
+**Remark: **  
+
+
+
+
+
