@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(wooldridge)
 library(AER)
 library(quantmod)
+library(PerformanceAnalytics)
 
 #ceosal2 data
 ceosalary <- ceosal2
@@ -46,13 +47,25 @@ summary(model)
 
 **Data: CPS 1988**.   
 
-**(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.   
+**(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.       
+
+```{r}
+head(cps)
+```
+
+*The CPS 1988 data set describes the wages of men 18 to 70 (in dollars per week), number of years of education, number of years of potential work experience, ethnicity (a factor with levels "cauc" for caucasian or "afam" for african american), smsa (which is a factor that records if the individual resides in a Standard Metropolitan Statistical area, with 1 being yes and 0 being no), region (a factor with levels "northeast", "midwest", "south", and "west), and parttime (a factor that answers the question if the individual works parttime, with 1 being yes and 0 being no). We used wage as the response variable and the rest of the variables as predictor values. There are no missing or NA values in the dataset. *    
 
 
 
-**(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
+**(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.      
 
+```{r}
+#preliminary model
+cpsmodel <- lm(wage~., data = cps)
+summary(model)
+```
 
+*The preliminary model summary shows that the linear model has an r^2 value of .8776, meaning that 87.76% of the variation in the data can be explained by the model.*
 
 **(c) Briefly discuss residuals**.  
 
@@ -99,7 +112,6 @@ DASH.return <- dailyReturn(DASH.close)
 **(a)Plot close prices on three different plots. Notice the general "t????" "variation" on different spans.**  
 ```{r, warning=FALSE}
 #Plot close stock prices on different plots.
-library(PerformanceAnalytics)
 plot(DIS.close, main = "Disney Closing Prices", type = "l", col = "blue", xlab = "Date", ylab = "Price")
 plot(NVDA.close, main = "NVIDIA Closing Prices", type = "l", col = "red", xlab = "Date", ylab = "Price")
 plot(CVNA.close, main = "Carvana Closing Prices", type = "l", col = "green", xlab = "Date", ylab = "Price")
