@@ -60,14 +60,23 @@ head(mr)
 **(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.      
 
 ```{r}
+#creating preliminary model
 murdermodel <- lm(rate~., data = mr)
 summary(murdermodel)
 
-newmodel <- step(murdermodel, direction = "both", trace = 0)
-summary(newmodel)
+#calculation for preliminary models' s-squared value
+#mean(murdermodel$residuals^2)
 ```
 
-*The preliminary *
+*In the preliminary model, all predictor variables were used to create the model. The R^2 value for this preliminary model is .7459, meaning that 74.59% of the variation in the response can be explained by these predictor variables. The p-value for the f-test in this preliminary model is 5.105e-09, meaning that this model is non trivial. The summary output for the preliminary model also shows that the only statistically significant predictors in this model are time and the southern factor. The S-squared value for this model is about 4.94, meaning that on average, the preliminary model's predictions deviate by about 4.94 murders from the true murder rate.*        
+
+
+```{r}
+#taking out outliers
+newmurdermodel <- step(murdermodel, direction = "both", trace = 0)
+summary(newmurdermodel)
+```
+
 
 **(c) Briefly discuss residuals**.  
 
