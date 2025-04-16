@@ -15,6 +15,7 @@ library(wooldridge)
 library(AER)
 library(quantmod)
 library(PerformanceAnalytics)
+library(lmtest)
 
 #ceosal2 data
 ceosalary <- ceosal2
@@ -89,8 +90,35 @@ summary(updatedmurdermodel)
 
 
 
-**(c) Briefly discuss residuals**.  
+**(c) Briefly discuss residuals**.   
 
+```{r}
+##taking a look at residuals
+
+#checking if data is normally distributed
+qqnorm(residuals(updatedmurdermodel))
+qqline(residuals(updatedmurdermodel))
+```
+
+*The normal qqplot for this model suggests that the data in this model is normally distributed*.       
+
+
+```{r}
+#checking if residuals are randomly distributed
+plot(residuals(updatedmurdermodel))
+abline(a = 0, b = 0)
+```
+
+*The residuals for this model also seem to be randomly scattered around 0, meaning that a linear model may be a good fit for the data*.     
+
+
+```{r}
+#residuals vs fitted values plot
+plot(updatedmurdermodel$fitted.values, residuals(updatedmurdermodel))
+abline(a = 0, b = 0)
+bptest(updatedmurdermodel)
+```
+*In the fitted values vs residuals plot, there does seem to somewhat of a pattern, suggesting that there is heteroscedasticity present. This is confirmed by the Breusch-Pagan test (which has a p-value of about .038)*.    
 
 
 **(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
