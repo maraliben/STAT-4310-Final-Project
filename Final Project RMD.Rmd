@@ -3,6 +3,7 @@ title: "Final Project RMD"
 author: "Marali Benitez, Youcef Djoudi, Kelly Thackery, Samina Issa, Samira Bechi"
 date: "2025-04-09"
 output:
+  word_document: default
   html_document:
     df_print: paged
 ---
@@ -347,7 +348,7 @@ SP500.close <- SP500[ , 5]
 SP500.return<- dailyReturn(SP500.close)
 
 ##Riskfree rates 
-rf <- read.csv(file.choose(), head=T, skip=3) # a data frame
+rf <- read.csv("F-F_Research_Data_Factors_daily.CSV", head=T, skip=3) # a data frame
 head(rf)
 rf$dates <- as.Date(rf$X, format="%Y%m%d") # create dates as X in the fama.french
 ## sort ff according to dates 
