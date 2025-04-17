@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 ##loading in packages and data
 library(wooldridge)
 library(AER)
@@ -285,7 +285,7 @@ plot(SPOT.close, main = "Spotify Closing Prices", type = "l", col = "magenta", x
 plot(DASH.close, main = "DoorDash Closing Prices", type = "l", col = "purple", xlab = "Date", ylab = "Price")
 ```
 
-**Remark: . **  
+**Remark: The closing prices for Disney, Carvana, Spotify and Doordash show a decline in 2022. Carvana doesn't have much variation through 2023. Spotify shows an increase with slight variation in 2023. Disney and Doordash both show variation in 2023. The closing price for NVIDIA rises until the end of 2021 then falls until it starts to rise again toward the end of 2022.**    
 
 **(b)Calculate annualized average return and annualized risk. Present the correlations matrix.**  
 ```{r, warning=FALSE}
@@ -325,7 +325,8 @@ chart.Correlation(returns)
           NVIDIA has a 58.3% return with a 53% risk.    
           Carvana has a 31.3% return with a 129.6% risk.  
           Spoify has a -3.4% return with a 51.7% risk.  
-          DoorDash has a 10.9% return with a 67.1% risk.**    
+          DoorDash has a 10.9% return with a 67.1% risk. 
+          From the correlation coefficients we can see these companies generally move in the same direction. The Spotify-Doordash scatter plot shows a tight upward trend, indicating a strong positive correlation between the two.**  
 
 **(c)Plot cumulative returns on one common plot.**  
 ```{r, warning=FALSE}
@@ -385,7 +386,7 @@ results_table <- rbind(Disney  = res_DIS, NVIDIA  = res_NVDA, Carvana = res_CVNA
 print(results_table)
 ```
 
-**Remark: **  
+**Remark: The alphas tell us the stocks underperformed relative to market expectations. Betas are less than the baseline of 1, suggesting less sensitivity to market movements.**      
 
 
 
