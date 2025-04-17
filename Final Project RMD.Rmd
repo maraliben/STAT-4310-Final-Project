@@ -2,7 +2,9 @@
 title: "Final Project RMD"
 author: "Marali Benitez, Youcef Djoudi, Kelly Thackery, Samina Issa, Samira Bechi"
 date: "2025-04-09"
-output: word_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -184,7 +186,7 @@ qqnorm(residuals(updatedmurdermodel))
 qqline(residuals(updatedmurdermodel))
 ```
 
-*The normal qqplot for this model suggests that the data in this model is normally distributed*.       
+*The normal qqplot for this model suggests that the residuals in this model are normally distributed*.       
 
 
 ```{r}
@@ -206,7 +208,37 @@ bptest(updatedmurdermodel)
 *In the fitted values vs residuals plot, there does seem to somewhat of a pattern, suggesting that there is heteroscedasticity present. This is confirmed by the Breusch-Pagan test (which has a p-value of about .038)*.    
 
 
-**(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
+**(d) Make 2 predictions with CI's. Interpret predictions if needed**.    
+
+```{r}
+## hypothetical state 1
+state1 <- data.frame(
+  convictions = .3,
+  time = 150,
+  income = 2,
+  noncauc = .015,
+  southern = "yes"
+)
+
+##hypothetical state 2
+state2 <- data.frame(
+  convictions = .15,
+  time =100,
+  income = 3,
+  noncauc = .2,
+  southern = "no"
+)
+
+prediction1 <- predict(updatedmurdermodel, newdata = state1, interval = "confidence")
+prediction2 <- predict(updatedmurdermodel, newdata = state2, interval = "confidence")
+
+prediction1
+prediction2
+```
+*Hypothetical state 1 inputs: convictions = .3, time = 150, income = 2, noncaucasian = .015, southern = "yes". Hypothetical state 2 inputs: convictions = .15, time = 100, income = 3, noncaucasian = .2, southern = "no". The 95% confidence interval for hypothetical state 1 is (4.46, 8.6), meaning that for a state with those inputs, we are 95% confident that the true murder rate per 100,000 per the FBI estimates for that state is in between those two values. For the 2nd hypothetical state, we would be 95% that the true murder rate per 100,000 per the FBI estimates for that state is in between (.43, 6.42).*          
+
+
+
 
 ## Finance Application  
 
@@ -350,7 +382,6 @@ results_table <- rbind(Disney  = res_DIS, NVIDIA  = res_NVDA, Carvana = res_CVNA
 
 # Display the resulting table
 print(results_table)
-
 ```
 
 **Remark: **  
