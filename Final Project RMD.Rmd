@@ -138,11 +138,11 @@ DASH<-getSymbols("DASH", from=start, to=end, auto.assign=FALSE)
 
 
 ## Closed price
-DIS.close <- DIS[ ,3]
-NVDA.close <- NVDA[ ,3]
-CVNA.close <- CVNA[ ,3]
-SPOT.close <- SPOT[ ,3]
-DASH.close <- SPOT[ ,3]
+DIS.close <- DIS[ ,4]
+NVDA.close <- NVDA[ ,4]
+CVNA.close <- CVNA[ ,4]
+SPOT.close <- SPOT[ ,4]
+DASH.close <- DASH[ ,4]
 
 ## Returns
 DIS.return <- dailyReturn(DIS.close)
@@ -150,16 +150,14 @@ NVDA.return <- dailyReturn(NVDA.close)
 CVNA.return <- dailyReturn(CVNA.close)
 SPOT.return <- dailyReturn(SPOT.close)
 DASH.return <- dailyReturn(DASH.close)
-
-
 ```
 
-**Disney: beta(1.44), P/E(29.69), Growth Estimate(29.1), Industry: Entertainment    
-  Nvidia: beta(1.96), P/E(38.89), Growth Estimate(13.7%), Industry: Semiconductors    
-  Carvana: beta(3.62), P/E(138.64), Growth Estimate(65.9%), Industry: Auto & Truck Dealerships     Spotify: beta(1.75), P/E(90.03), Growth Estimate(23.1%), Industry: Internet Content & Information  
-  DoorDash: beta(1.69), P/E(627.07), Growth Estimate(36.8%), Industry: Communication Services**      
+**Disney: beta(1.44), P/E(29.69), Growth Estimate(11.28), Industry: Entertainment    
+  Nvidia: beta(1.96), P/E(38.89), Growth Estimate(27.98%), Industry: Semiconductors    
+  Carvana: beta(3.62), P/E(138.64), Growth Estimate(43.53%), Industry: Auto & Truck Dealerships     Spotify: beta(1.75), P/E(90.03), Growth Estimate(27.20%), Industry: Internet Content &      Information  
+  DoorDash: beta(1.69), P/E(627.07), Growth Estimate(31.84%), Industry: Communication Services**      
         
-**(a)Plot close prices on three different plots. Notice the general "t????" "variation" on different spans.**  
+**(a)Plot close prices on three different plots. Notice the general "the pattern variation" on different spans.**  
 ```{r, warning=FALSE}
 #Plot close stock prices on different plots.
 plot(DIS.close, main = "Disney Closing Prices", type = "l", col = "blue", xlab = "Date", ylab = "Price")
@@ -169,7 +167,7 @@ plot(SPOT.close, main = "Spotify Closing Prices", type = "l", col = "magenta", x
 plot(DASH.close, main = "DoorDash Closing Prices", type = "l", col = "purple", xlab = "Date", ylab = "Price")
 ```
 
-**Remark: There is significant drop for Disney early in 2022 and then remains volatile. NVidia has seen a steady rise witha few minor dips in last half of 2024. We see Carvana fall spring 2022 and doesn't start to rise again until spring 2024. **  
+**Remark: . **  
 
 **(b)Calculate annualized average return and annualized risk. Present the correlations matrix.**  
 ```{r, warning=FALSE}
@@ -205,7 +203,11 @@ chart.Correlation(returns)
 ```
 
 
-**Remark: **  
+**Remark: Disney has a -18.1% return with a 29.9% risk.    
+          NVIDIA has a 58.3% return with a 53% risk.    
+          Carvana has a 31.3% return with a 129.6% risk.  
+          Spoify has a -3.4% return with a 51.7% risk.  
+          DoorDash has a 10.9% return with a 67.1% risk.**    
 
 **(c)Plot cumulative returns on one common plot.**  
 ```{r, warning=FALSE}
@@ -218,7 +220,7 @@ chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
 
 ```
 
-**Remark: **  
+**Remark: NVIDIA shows a significant upward trend, indicating strong growth.Disney, Carvana, Spotify, and DoorDash have more moderate growth.**  
 
 **(d)Estimate alpha, beta, Rsquare.**  
 ```{r}
