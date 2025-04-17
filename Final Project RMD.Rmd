@@ -29,24 +29,108 @@ mr <- MurderRates
 
 **(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.   
 
+```{r}
+library(wooldridge)
+data("ceosal2")
+head(ceosal2)
+```
+
+*This dataset (`ceosal2`) includes information on CEOs and their companies. The analysis focuses on how various CEO and firm characteristics influence company profits*.     
+
+##### Variables:
+
+**Response Variable:**
+- `profits`: Annual firm profits (in millions).  
+  - Type: **Continuous**.   
+
+| Variable     | Description                                       | Type                  
+|--------------|---------------------------------------------------|-----------------------
+| `salary`     | CEO salary (in thousands)                         | Continuous            
+| `age`        | CEO age                                           | Continuous            
+| `college`    | 1 = undergraduate degree                          | Categorical (binary)  
+| `grad`       | 1 = graduate degree                               | Categorical (binary)  
+| `comten`     | Years with the company                            | Continuous            
+| `ceoten`     | Years as CEO                                      | Continuous            
+| `sales`      | Company sales (in millions)                       | Continuous            
+| `mktval`     | Market value (in millions)                        | Continuous            
+| `lmktval`    | Log of market value                               | Continuous            
+| `comtensq`   | Square of company tenure                          | Continuous            
+| `ceotensq`   | Square of CEO tenure                              | Continuous            
+| `profmarg`   | Profit margin = profits/sales                     | Continuous            |
+
+**Excluded Predictors:**
+- `lsalary`, `lsales`: Log-transformed versions of salary and sales; excluded from final model.     
+
+```{r}
+#Check for missing values
+colSums(is.na(ceosal2))
+```
+
+*NO missing values in the data set*.     
+
 
 
 **(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
 ```{r}
-model<- lm(profits ~. -lsalary -lsales, ceosalary)
+#preliminary model
+model <- lm(profits ~ salary + age + college + grad + comten + ceoten +
+            sales + mktval + lmktval + comtensq + ceotensq + profmarg, 
+            data = ceosalary)
+
 summary(model)
 
 ```
-**(c) Briefly discuss residuals**.  
+**(c) Briefly discuss residuals**.     
+
+```{r}
+# Q-Q plot: check for normality of residuals
+
+```
+
 
 
 
 **(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
 
+```{r}
+# Hypothetical CEO 1
+new_ceo1 <- data.frame(
+  salary = 900,
+  age = 50,
+  college = 1,
+  grad = 1,
+  comten = 12,
+  ceoten = 6,
+  sales = 4500,
+  mktval = 1800,
+  lmktval = log(1800),
+  comtensq = 144,
+  ceotensq = 36,
+  profmarg = 10
+)
+
+# Hypothetical CEO 2
+new_ceo2 <- data.frame(
+  salary = 1200,
+  age = 60,
+  college = 0,
+  grad = 0,
+  comten = 8,
+  ceoten = 4,
+  sales = 7000,
+  mktval = 3000,
+  lmktval = log(3000),
+  comtensq = 64,
+  ceotensq = 16,
+  profmarg = 15
+)
+
+#make predictions with 95% CI
+```
 
 
 
-**Data: CPS 1988**.   
+**Data: MurderRates**.   
 
 **(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.       
 
@@ -118,6 +202,7 @@ plot(updatedmurdermodel$fitted.values, residuals(updatedmurdermodel))
 abline(a = 0, b = 0)
 bptest(updatedmurdermodel)
 ```
+
 *In the fitted values vs residuals plot, there does seem to somewhat of a pattern, suggesting that there is heteroscedasticity present. This is confirmed by the Breusch-Pagan test (which has a p-value of about .038)*.    
 
 
