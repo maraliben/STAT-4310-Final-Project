@@ -76,21 +76,46 @@ colSums(is.na(ceosal2))
 **(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
 ```{r}
 #preliminary model
-model <- lm(profits ~ salary + age + college + grad + comten + ceoten +
-            sales + mktval + lmktval + comtensq + ceotensq + profmarg, 
-            data = ceosalary)
+model <- lm(profits ~.,data = ceosalary)
 
 summary(model)
+
+```
+
+```{r}
+#taking out outliers
+cooksd <- cooks.distance(model)
+influential <- as.numeric(names(cooksd)[(cooksd > (4 / nrow(ceosalary)))])
+influential
+newceosalary <- ceosalary[-influential]
+#creating reduced model with no outliers in model
+newceosalary_model <- lm(profits~., data = newceosalary)
+summary(newceosalary_model)
+#creating newer updated model using step function
+updatedceosalmodel <- step(newceosalary_model, direction = "both", trace = 0)
+summary(updatedceosalmodel)
 
 ```
 **(c) Briefly discuss residuals**.     
 
 ```{r}
 # Q-Q plot: check for normality of residuals
+qqnorm(residuals(updatedceosalmodel))
+qqline(residuals(updatedceosalmodel), col = "red", lwd = 2)
 
 ```
+```{r}
+#checking if residuals are randomly distributed
+plot(residuals(updatedceosalmodel))
+abline(a = 0, b = 0)
+```
 
-
+```{r}
+#residuals vs fitted values plot
+plot(updatedceosalmodel$fitted.values, residuals(updatedceosalmodel))
+abline(a = 0, b = 0)
+bptest(updatedceosalmodel)
+```
 
 
 **(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
@@ -129,6 +154,12 @@ new_ceo2 <- data.frame(
 )
 
 #make predictions with 95% CI
+# Predictions for CEO 1
+predict(updatedceosalmodel, newdata = new_ceo1, interval = "confidence")
+
+# Predictions for CEO 2
+predict(updatedceosalmodel, newdata = new_ceo2, interval = "confidence")
+
 ```
 
 
