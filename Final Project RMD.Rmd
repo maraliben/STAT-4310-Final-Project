@@ -330,24 +330,28 @@ DoorDash has a 10.9% return with a 67.1% risk. From the correlation coefficients
 **(c)Plot cumulative returns on one common plot.**
 
 ```{r, warning=FALSE}
-## Compute cumulative returns
-cumulative_returns <- cumprod(1 + returns)
-
-## Using chart.CumReturns from PerformanceAnalytics
-chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
-                 main = 'Cumulative Returns', colorset = c('blue', 'red','green','magenta','purple'))
-
-```
-
-**Remark: NVIDIA shows a significant upward trend, indicating strong growth.Disney, Carvana, Spotify, and DoorDash have more moderate growth.**
-
-**(d)Estimate alpha, beta, Rsquare.**
-
-```{r}
 ## SP500(Benchmark)
 SP500<- getSymbols("^GSPC", from=start, to=end, auto.assign = FALSE)
 SP500.close <- SP500[ , 5]
 SP500.return<- dailyReturn(SP500.close)
+
+## Combine all returns into one data frame
+returns <- cbind(DIS.return, NVDA.return, CVNA.return, SPOT.return, DASH.return, SP500.return)
+colnames(returns) <- c('Disney', 'NVIDIA', 'Carvana', 'Spotify', 'DoorDash', 'SP500')
+
+
+## Plot cumulative returns using chart.CumReturns from PerformanceAnalytics
+library(PerformanceAnalytics)
+chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
+                 main = 'Cumulative Returns', colorset=c('blue','red','green','magenta','purple','black'))
+
+```
+
+**Remark: NVIDIA shows a significant upward trend, indicating strong growth. Disney, Carvana, Spotify, and DoorDash have more moderate growth. You can see the SP500 **
+
+**(d)Estimate alpha, beta, Rsquare.**
+
+```{r}
 
 ##Riskfree rates 
 rf <- read.csv("F-F_Research_Data_Factors_daily.CSV", head=T, skip=3) # a data frame
