@@ -1,0 +1,159 @@
+---
+title: "Final Project RMD"
+author: "Marali Benitez, Youcef Djoudi, Kelly Thackery, Samina Issa, Samira Bechi"
+date: "2025-04-09"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+##loading in packages and data
+library(wooldridge)
+library(AER)
+library(quantmod)
+library(PerformanceAnalytics)
+library(lmtest)
+
+#ceosal2 data
+ceosalary <- ceosal2
+
+#Murder rates data
+data("MurderRates")
+mr <- MurderRates
+```
+
+**Data: ceosal2**
+
+**(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.   
+
+```{r}
+library(wooldridge)
+data("ceosal2")
+head(ceosal2)
+```
+
+*This dataset (`ceosal2`) includes information on CEOs and their companies. The analysis focuses on how various CEO and firm characteristics influence company profits*.     
+
+##### Variables:
+
+**Response Variable:**
+- `profits`: Annual firm profits (in millions).  
+  - Type: **Continuous**.   
+
+| Variable     | Description                                       | Type                  
+|--------------|---------------------------------------------------|-----------------------
+| `salary`     | CEO salary (in thousands)                         | Continuous            
+| `age`        | CEO age                                           | Continuous            
+| `college`    | 1 = undergraduate degree                          | Categorical (binary)  
+| `grad`       | 1 = graduate degree                               | Categorical (binary)  
+| `comten`     | Years with the company                            | Continuous            
+| `ceoten`     | Years as CEO                                      | Continuous            
+| `sales`      | Company sales (in millions)                       | Continuous            
+| `mktval`     | Market value (in millions)                        | Continuous            
+| `lmktval`    | Log of market value                               | Continuous            
+| `comtensq`   | Square of company tenure                          | Continuous            
+| `ceotensq`   | Square of CEO tenure                              | Continuous            
+| `profmarg`   | Profit margin = profits/sales                     | Continuous            |
+
+**Excluded Predictors:**
+- `lsalary`, `lsales`: Log-transformed versions of salary and sales; excluded from final model.     
+
+```{r}
+#Check for missing values
+colSums(is.na(ceosal2))
+```
+
+*NO missing values in the data set*.     
+
+
+
+**(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
+```{r}
+#preliminary model
+model <- lm(profits ~ . -lsalary -lmktval -lsales, data=ceosal2)
+summary(model)
+
+```
+*In the primary model, all variables were included except for lsalary, lmktval, and lsales. The R² value is 0.877, indicating that approximately 87.7% of the variation in profits is accounted for by the model. The F-test p-value is less than 2.2e-16, confirming that the model is statistically significant and not due to random chance. Based on the summary output, the predictors that show statistical significance are sales, market value (mktval), and profit margin (profmarg). The residual standard error is 146.5, suggesting that, on average, the model's profit predictions differ from the actual values by about 146.5 units.*
+
+```{r}
+
+# Optimal Model
+model1<-step(model)
+summary(model1)
+
+```
+*The optimal modelincludes only sales, market value (mktval), and profit margin (profmarg) as predictors. This model achieves an R² of 0.8754, meaning it explains about 87.5% of the variation in profits. The F-test p-value is less than 2.2e-16, indicating the model is statistically significant. All three predictors are highly significant, with p-values less than 0.01. The residual standard error is 144, suggesting that on average, the model's predictions deviate from actual profits by about 144 units.*
+
+*The primary model included a wider range of predictors while still retaining sales, market value, and profit margin as key variables. In contrast, the optimal model selected only these three significant predictors using stepwise AIC. Despite having fewer variables, the optimal model maintains nearly the same explanatory power (R² ~87.5%).*
+
+```{r}
+#taking out outliers
+cooks <- cooks.distance(model1)
+summary(cooks)
+
+
+
+#creating reduced model with no outliers in model
+ceosal2.new <- ceosal2[ cooks <=0.000394    ,    ]
+model2 <- update(model1, data=ceosal2.new)
+summary(model2)
+
+
+```
+*After removing outliers, the refined model includes sales, market value (mktval), and profit margin (profmarg) as predictors. The R² value increased to 0.9414, indicating that the model now explains about 94.1% of the variation in profits—a substantial improvement. All predictors remain highly significant with p-values < 0.001. The residual standard error dropped to 26.59*
+
+**(c) Briefly discuss residuals**.   
+
+```{r}
+
+res <- model2$residuals
+plot(model2)
+
+plot(res)
+
+
+```
+*Residuals vs Fitted Plot shows a fairly random scatter of residuals around zero, which suggests that the linearity assumption holds reasonably well. A slight curve at higher fitted values indicates some mild non-linearity.*
+*Q-Q Plot largely follow the 45-degree line, indicating that they are approximately normally distributed. There are a few deviations at the tails.*
+*The Scale-Location plot shows that the spread of the standardized residuals remains consistent across the range of fitted values.*
+*Residuals vs Leverage Plot's most points fall within safe Cook's distance lines.*
+*Index Plot confirms there's no clear trend or clustering pattern in the residuals.*
+*These plots suggest that the reduced model fits the data well*
+
+
+
+
+**(d) Make 2 predictions with CI's. Interpret predictions if needed**.  
+
+```{r}
+# Hypothetical CEO 1 - using your final model (model2)
+new_ceo1 <- data.frame(
+  sales = 4500,
+  mktval = 1800,
+  profmarg = 10
+)
+
+# Hypothetical CEO 2  - using your final model (model2)
+new_ceo2 <- data.frame(
+  sales = 7000,
+  mktval = 3000,
+  profmarg = 15
+)
+
+#make predictions with 95% CI
+# Predictions for CEO 1
+predict(model2, newdata = new_ceo1, interval = "confidence")
+
+# Predictions for CEO 2
+predict(model2, newdata = new_ceo2, interval = "confidence")
+
+```
+*For CEO 1, the predicted profit is approximately 154.17 units, with a 95% confidence interval between 140.18 and 168.16, meaning the true average profit for similar companies is likely within this range.*
+*For CEO 2, the predicted profit is around 258.70 units, with a 95% confidence interval from 234.95 to 282.44, indicating a higher expected profit driven by greater sales, market value, and profit margin.*
