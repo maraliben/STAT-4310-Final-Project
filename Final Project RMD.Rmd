@@ -27,7 +27,6 @@ ceosalary <- ceosal2
 data("MurderRates")
 mr <- MurderRates
 ```
-
 **Data: ceosal2**
 
 **(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.   
@@ -76,7 +75,7 @@ colSums(is.na(ceosal2))
 **(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
 ```{r}
 #preliminary model
-model <- lm(profits ~ . -lsalary -lmktval -lsales, data=ceosal2)
+model <- lm(profits ~ .-lsalary -lmktval -lsales, data=ceosal2)
 summary(model)
 
 ```
@@ -122,33 +121,15 @@ bptest(updatedceosalmodel)
 ```{r}
 # Hypothetical CEO 1
 new_ceo1 <- data.frame(
-  salary = 900,
-  age = 50,
-  college = 1,
-  grad = 1,
-  comten = 12,
-  ceoten = 6,
   sales = 4500,
   mktval = 1800,
-  lmktval = log(1800),
-  comtensq = 144,
-  ceotensq = 36,
   profmarg = 10
 )
 
 # Hypothetical CEO 2
 new_ceo2 <- data.frame(
-  salary = 1200,
-  age = 60,
-  college = 0,
-  grad = 0,
-  comten = 8,
-  ceoten = 4,
   sales = 7000,
   mktval = 3000,
-  lmktval = log(3000),
-  comtensq = 64,
-  ceotensq = 16,
   profmarg = 15
 )
 
