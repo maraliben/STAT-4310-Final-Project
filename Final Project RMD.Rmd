@@ -27,7 +27,6 @@ ceosalary <- ceosal2
 data("MurderRates")
 mr <- MurderRates
 ```
-
 **Data: ceosal2**
 
 **(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.
@@ -73,12 +72,11 @@ colSums(is.na(ceosal2))
 
 ```{r}
 #preliminary model
-model <- lm(profits ~.,data = ceosalary)
-
+model <- lm(profits ~ .-lsalary -lmktval -lsales, data=ceosal2)
 summary(model)
 
 ```
-
+*In the primary model, all variables were included except for lsalary, lmktval, and lsales. The R² value is 0.877, indicating that approximately 87.7% of the variation in profits is accounted for by the model. The F-test p-value is less than 2.2e-16, confirming that the model is statistically significant and not due to random chance. Based on the summary output, the predictors that show statistical significance are sales, market value (mktval), and profit margin (profmarg). The residual standard error is 146.5, suggesting that, on average, the model's profit predictions differ from the actual values by about 146.5 units.*
 ```{r}
 #taking out outliers
 cooksd <- cooks.distance(model)
@@ -86,7 +84,7 @@ influential <- as.numeric(names(cooksd)[(cooksd > (4 / nrow(ceosalary)))])
 influential
 newceosalary <- ceosalary[-influential]
 #creating reduced model with no outliers in model
-newceosalary_model <- lm(profits~., data = newceosalary)
+newceosalary_model <- lm(profits~.-lsalary -lmktval -lsales, data = newceosalary)
 summary(newceosalary_model)
 #creating newer updated model using step function
 updatedceosalmodel <- step(newceosalary_model, direction = "both", trace = 0)
@@ -121,33 +119,15 @@ bptest(updatedceosalmodel)
 ```{r}
 # Hypothetical CEO 1
 new_ceo1 <- data.frame(
-  salary = 900,
-  age = 50,
-  college = 1,
-  grad = 1,
-  comten = 12,
-  ceoten = 6,
   sales = 4500,
   mktval = 1800,
-  lmktval = log(1800),
-  comtensq = 144,
-  ceotensq = 36,
   profmarg = 10
 )
 
 # Hypothetical CEO 2
 new_ceo2 <- data.frame(
-  salary = 1200,
-  age = 60,
-  college = 0,
-  grad = 0,
-  comten = 8,
-  ceoten = 4,
   sales = 7000,
   mktval = 3000,
-  lmktval = log(3000),
-  comtensq = 64,
-  ceotensq = 16,
   profmarg = 15
 )
 
