@@ -76,12 +76,11 @@ colSums(is.na(ceosal2))
 **(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.  
 ```{r}
 #preliminary model
-model <- lm(profits ~.,data = ceosalary)
-
+model <- lm(profits ~ . -lsalary -lmktval -lsales, data=ceosal2)
 summary(model)
 
 ```
-
+*In the primary model, all variables were included except for lsalary, lmktval, and lsales. The R² value is 0.877, indicating that approximately 87.7% of the variation in profits is accounted for by the model. The F-test p-value is less than 2.2e-16, confirming that the model is statistically significant and not due to random chance. Based on the summary output, the predictors that show statistical significance are sales, market value (mktval), and profit margin (profmarg). The residual standard error is 146.5, suggesting that, on average, the model's profit predictions differ from the actual values by about 146.5 units.*
 ```{r}
 #taking out outliers
 cooksd <- cooks.distance(model)
