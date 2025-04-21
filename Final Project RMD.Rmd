@@ -88,7 +88,7 @@ influential <- as.numeric(names(cooksd)[(cooksd > (4 / nrow(ceosalary)))])
 influential
 newceosalary <- ceosalary[-influential]
 #creating reduced model with no outliers in model
-newceosalary_model <- lm(profits~., data = newceosalary)
+newceosalary_model <- lm(profits~.-lsalary -lmktval -lsales, data = newceosalary)
 summary(newceosalary_model)
 #creating newer updated model using step function
 updatedceosalmodel <- step(newceosalary_model, direction = "both", trace = 0)
