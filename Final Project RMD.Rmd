@@ -3,9 +3,9 @@ title: "Final Project RMD"
 author: "Marali Benitez, Youcef Djoudi, Kelly Thackery, Samina Issa, Samira Bechi"
 date: "2025-04-09"
 output:
-  word_document: default
   html_document:
     df_print: paged
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -27,9 +27,9 @@ ceosalary <- ceosal2
 data("MurderRates")
 mr <- MurderRates
 ```
-**Data: ceosal2**
+#### Data: ceosal2
 
-**(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.
+##### (a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data.
 
 ```{r}
 library(wooldridge)
@@ -37,7 +37,7 @@ data("ceosal2")
 head(ceosal2)
 ```
 
-*This dataset (`ceosal2`) includes information on CEOs and their companies. The analysis focuses on how various CEO and firm characteristics influence company profits*.
+**This dataset (`ceosal2`) includes information on CEOs and their companies. The analysis focuses on how various CEO and firm characteristics influence company profits**.
 
 ##### Variables:
 
@@ -66,9 +66,9 @@ head(ceosal2)
 colSums(is.na(ceosal2))
 ```
 
-*NO missing values in the data set*.
+**NO missing values in the data set**.
 
-**(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.
+##### (b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers.
 
 ```{r}
 #preliminary model
@@ -76,7 +76,9 @@ model <- lm(profits ~ .-lsalary -lmktval -lsales, data=ceosal2)
 summary(model)
 
 ```
-*In the primary model, all variables were included except for lsalary, lmktval, and lsales. The R² value is 0.877, indicating that approximately 87.7% of the variation in profits is accounted for by the model. The F-test p-value is less than 2.2e-16, confirming that the model is statistically significant and not due to random chance. Based on the summary output, the predictors that show statistical significance are sales, market value (mktval), and profit margin (profmarg). The residual standard error is 146.5, suggesting that, on average, the model's profit predictions differ from the actual values by about 146.5 units.*
+
+**In the primary model, all variables were included except for lsalary, lmktval, and lsales. The R² value is 0.877, indicating that approximately 87.7% of the variation in profits is accounted for by the model. The F-test p-value is less than 2.2e-16, confirming that the model is statistically significant and not due to random chance. Based on the summary output, the predictors that show statistical significance are sales, market value (mktval), and profit margin (profmarg). The residual standard error is 146.5, suggesting that, on average, the model's profit predictions differ from the actual values by about 146.5 units.**
+
 ```{r}
 #taking out outliers
 cooksd <- cooks.distance(model)
@@ -92,7 +94,10 @@ summary(updatedceosalmodel)
 
 ```
 
-**(c) Briefly discuss residuals**.
+**After calculating the cooks distance we found that there were no outliers according to cooks distance, so no observations were removed. The r^2 value has stayed relatively the same, but the model was reduced to only three predictor variables: sales, mktval, and profmarg. All of these variables, including the intercept, are statistically significant according to the p-value from the t-test. The f-test for this reduced model shows that it is also statistically significant**.  
+
+
+##### (c) Briefly discuss residuals.
 
 ```{r}
 # Q-Q plot: check for normality of residuals
@@ -100,12 +105,15 @@ qqnorm(residuals(updatedceosalmodel))
 qqline(residuals(updatedceosalmodel), col = "red", lwd = 2)
 
 ```
+**The normal qqplot deviates quite a bit from the normality line, suggesting that the residuals are not normally distributed**.  
 
 ```{r}
 #checking if residuals are randomly distributed
 plot(residuals(updatedceosalmodel))
 abline(a = 0, b = 0)
 ```
+**The residuals for this model seem to be randomly scattered around 0**.    
+
 
 ```{r}
 #residuals vs fitted values plot
@@ -113,8 +121,9 @@ plot(updatedceosalmodel$fitted.values, residuals(updatedceosalmodel))
 abline(a = 0, b = 0)
 bptest(updatedceosalmodel)
 ```
+**There does seem to somewhat of a pattern in the residuals vs fitted values plot, suggesting that there is heteroscedasticity present. This is confirmed by the Breusch-Pagan test (which has a p-value of about 6.818e-09), meaning that some predictinos made by the model may not be accurate.**
 
-**(d) Make 2 predictions with CI's. Interpret predictions if needed**.
+##### (d) Make 2 predictions with CI's. Interpret predictions if needed.
 
 ```{r}
 # Hypothetical CEO 1
@@ -139,18 +148,32 @@ predict(updatedceosalmodel, newdata = new_ceo1, interval = "confidence")
 predict(updatedceosalmodel, newdata = new_ceo2, interval = "confidence")
 
 ```
+**The first prediction is for a company with 4500 million dollars in profits, 1800 million in market value, and 10% profit margin. The second prediction is for a slightly more successful company with 7000 million in profits, 3000 million in market value, and a 15% profit margin**.   
 
-**Data: MurderRates**.
 
-**(a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data**.
+#### Data: MurderRates.
+
+##### (a) Describe the data. Describe the variables; response, predictors, continuous, categorical variables and missing data.
 
 ```{r}
 head(mr)
 ```
 
-*The murder rates data set contains data collected in 1950 that reflects 44 states' murder rate per 100,000 according to the FBI estimate, the convictions (which in this data set reflects the number of convictions divided by number of murders in 1950), the average number of executions from 1946-1950 divided by the number of convictions in 1950, the median time served in months of convicted murderers released in 1951, the median family income for the state in 1949 in thousands of dollars, the labor force participation rate for the state in 1950 (in percent), the proportion of the states population that is non-Caucasian in 1950, and southern, which indicates if the state is in the south or not. The response variable in this data would be the rate, while the other variables would be the predictors. There were no missing values in this data.*
+**The murder rates data set contains data collected in 1950 that reflects 44 states' murder rates among other variables. The variables for this dataset are as follows: **
 
-**(b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.
+* rate (continuous): the states murder rate per 100,000 according to the FBI estimate. 
+* convictions (continuous): the number of convictions divided by the number of murders in 1950.  
+* executions (continuous): the average number of executions from 1946-1950 divided by the number of convictions in 1950.    
+* time (discrete): median time (served in months) of convicted murderers in the state released in 1951.     
+* income (continuous): median family income for the state in 1949 (in thousands of US dollars).    
+* lfp (continuous): the labor force participation rate in the state in 1949.   
+* noncaucasian (continous): proportion of the population that is non-cacasian in the state as of 1950.   
+* southern (factor): indicates if the state is in the south or not.   
+
+**There were no missing values in this dataset.**
+
+
+##### (b) Build an optimal model. Print summary: discuss F-test, t-tests, Rsquare, S-square. Take out outliers**.
 
 ```{r}
 #creating preliminary model
@@ -178,9 +201,9 @@ updatedmurdermodel <- step(newmurdermodel, direction = "both", trace = 0)
 summary(updatedmurdermodel)
 ```
 
-*After taking out the outliers, we can see that the R\^2 value has increased to .8288, and the the S\^2 value has gone down to 1.841. We then reduced the model using the step function, where we can see that the r\^2 and s\^2 did not change by much (the new r\^2 value is .8234 and the new s\^2 value is 1.814). The predictors for this model have been reduced to convictions, time, income, noncaucasian, and southern. More of the predictors are statistically significant in this model, with the intercept, convictions, noncaucasian, and southern all being statistically significant according to the p-value found by the t-tests. The f-test for this reduced model shows that it is nontrivial, as the p-value for the f-test is 7.059e-12.*
+*Removing the outliers took out about 9% of the data. After taking out the outliers, we can see that the R\^2 value has increased to .8288, and the the S\^2 value has gone down to 1.841. We then reduced the model using the step function, where we can see that the r\^2 and s\^2 did not change by much (the new r\^2 value is .8234 and the new s\^2 value is 1.814). The predictors for this model have been reduced to convictions, time, income, noncaucasian, and southern. More of the predictors are statistically significant in this model, with the intercept, convictions, noncaucasian, and southern all being statistically significant according to the p-value found by the t-tests. The f-test for this reduced model shows that it is nontrivial, as the p-value for the f-test is 7.059e-12.*
 
-**(c) Briefly discuss residuals**.
+##### (c) Briefly discuss residuals.
 
 ```{r}
 ##taking a look at residuals
@@ -209,7 +232,7 @@ bptest(updatedmurdermodel)
 
 *In the fitted values vs residuals plot, there does seem to somewhat of a pattern, suggesting that there is heteroscedasticity present. This is confirmed by the Breusch-Pagan test (which has a p-value of about .038)*.
 
-**(d) Make 2 predictions with CI's. Interpret predictions if needed**.
+##### (d) Make 2 predictions with CI's. Interpret predictions if needed.
 
 ```{r}
 ## hypothetical state 1
@@ -239,9 +262,9 @@ prediction2
 
 *Hypothetical state 1 inputs: convictions = .3, time = 150, income = 2, noncaucasian = .015, southern = "yes". Hypothetical state 2 inputs: convictions = .15, time = 100, income = 3, noncaucasian = .2, southern = "no". The 95% confidence interval for hypothetical state 1 is (4.46, 8.6), meaning that for a state with those inputs, we are 95% confident that the true murder rate per 100,000 per the FBI estimates for that state is in between those two values. For the 2nd hypothetical state, we would be 95% that the true murder rate per 100,000 per the FBI estimates for that state is in between (.43, 6.42).*
 
-## Finance Application
+#### Finance Application
 
-**Read stock prices for 5 different stocks. Close prices for 3 years, most recent 2024. Criteria Beta \> 1, PE \> 10, growth \> 10%, different industries.**
+##### Read stock prices for 5 different stocks. Close prices for 3 years, most recent 2024. Criteria Beta \> 1, PE \> 10, growth \> 10%, different industries.
 
 ```{r}
 # Read stock prices
@@ -274,7 +297,7 @@ Nvidia: beta(1.96), P/E(38.89), Growth Estimate(27.98%), Industry: Semiconductor
 Carvana: beta(3.62), P/E(138.64), Growth Estimate(43.53%), Industry: Auto & Truck Dealerships Spotify: beta(1.75), P/E(90.03), Growth Estimate(27.20%), Industry: Internet Content & Information\
 DoorDash: beta(1.69), P/E(627.07), Growth Estimate(31.84%), Industry: Communication Services**
 
-**(a)Plot close prices on three different plots. Notice the general "trend" and "variation" on different spans.**
+##### (a)Plot close prices on three different plots. Notice the general "trend" and "variation" on different spans.
 
 ```{r, warning=FALSE}
 #Plot close stock prices on different plots.
@@ -287,7 +310,7 @@ plot(DASH.close, main = "DoorDash Closing Prices", type = "l", col = "purple", x
 
 **Remark: The closing prices for Disney, Carvana, Spotify and Doordash show a decline in 2022. Carvana doesn't have much variation through 2023. Spotify shows an increase with slight variation in 2023. Disney and Doordash both show variation in 2023. The closing price for NVIDIA rises until the end of 2021 then falls until it starts to rise again toward the end of 2022.**
 
-**(b)Calculate annualized average return and annualized risk. Present the correlations matrix.**
+##### (b) Calculate annualized average return and annualized risk. Present the correlations matrix.
 
 ```{r, warning=FALSE}
 library(PerformanceAnalytics)
@@ -327,7 +350,7 @@ Carvana has a 31.3% return with a 129.6% risk.\
 Spoify has a -3.4% return with a 51.7% risk.\
 DoorDash has a 10.9% return with a 67.1% risk. From the correlation coefficients we can see these companies generally move in the same direction. The Spotify-Doordash scatter plot shows a tight upward trend, indicating a strong positive correlation between the two.**
 
-**(c)Plot cumulative returns on one common plot.**
+##### (c)Plot cumulative returns on one common plot.
 
 ```{r, warning=FALSE}
 ## SP500(Benchmark)
@@ -349,7 +372,7 @@ chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
 
 **Remark: NVIDIA shows a significant upward trend, indicating strong growth. Disney, Carvana, Spotify, and DoorDash have more moderate growth. You can see the SP500 **
 
-**(d)Estimate alpha, beta, Rsquare.**
+##### (d)Estimate alpha, beta, Rsquare.
 
 ```{r}
 
