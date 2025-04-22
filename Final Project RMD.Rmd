@@ -264,7 +264,8 @@ prediction2
 
 #### Finance Application
 
-##### Read stock prices for 5 different stocks. Close prices for 3 years, most recent 2024. Criteria Beta \> 1, PE \> 10, growth \> 10%, different industries.
+##### Read stock prices for 5 different stocks. Close prices for 3 years, most recent 2024. Criteria Beta \> 1, PE \> 10, growth \> 10%, different industries.  
+ 
 
 ```{r}
 # Read stock prices
@@ -292,10 +293,11 @@ SPOT.return <- dailyReturn(SPOT.close)
 DASH.return <- dailyReturn(DASH.close)
 ```
 
-**Disney: beta(1.44), P/E(29.69), Growth Estimate(11.28), Industry: Entertainment\
-Nvidia: beta(1.96), P/E(38.89), Growth Estimate(27.98%), Industry: Semiconductors\
-Carvana: beta(3.62), P/E(138.64), Growth Estimate(43.53%), Industry: Auto & Truck Dealerships Spotify: beta(1.75), P/E(90.03), Growth Estimate(27.20%), Industry: Internet Content & Information\
-DoorDash: beta(1.69), P/E(627.07), Growth Estimate(31.84%), Industry: Communication Services**
+**The stocks selected are: Disney, Nvidia, Carvana, Spotify, and DoorDash. The criteria for selection were:\  
+Disney: beta(1.44), P/E(29.69), Growth Estimate(11.28%), Industry: Entertainment\  
+Nvidia: beta(1.96), P/E(38.89), Growth Estimate(27.98%), Industry: Semiconductors\  
+Carvana: beta(3.62), P/E(138.64), Growth Estimate(43.53%), Industry: Auto & Truck Dealerships\   Spotify: beta(1.75), P/E(90.03), Growth Estimate(27.20%), Industry: Internet Content & Information\  
+DoorDash: beta(1.69), P/E(627.07), Growth Estimate(31.84%), Industry: Communication Services**   
 
 ##### (a)Plot close prices on three different plots. Notice the general "trend" and "variation" on different spans.
 
@@ -370,7 +372,7 @@ chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
 
 ```
 
-**Remark: NVIDIA shows a significant upward trend, indicating strong growth. Disney, Carvana, Spotify, and DoorDash have more moderate growth. You can see the SP500 **
+**Remark: NVIDIA shows a significant upward trend, indicating strong growth. Disney, Carvana, Spotify, and DoorDash have more moderate growth.**
 
 ##### (d)Estimate alpha, beta, Rsquare.
 
@@ -383,10 +385,8 @@ rf$dates <- as.Date(rf$X, format="%Y%m%d") # create dates as X in the fama.frenc
 ## sort ff according to dates 
 rf.new <- rf[rf$dates >= "2021-01-01" & rf$dates<= "2024-01-01", ] 
 head(rf.new)
-#dim(rf.new)
-#tail(rf.new)
 rf.new <- rf.new[ -754, ]
-#dim(rf.new)
+
 
 # Estimate alpha, beta, Rsquare of 3 stocks.
 beta <- function(stock.return, market.return, riskfree.rate) {
@@ -413,4 +413,4 @@ results_table <- rbind(Disney  = res_DIS, NVIDIA  = res_NVDA, Carvana = res_CVNA
 print(results_table)
 ```
 
-**Remark: The alphas tell us the stocks underperformed relative to market expectations. Betas are less than the baseline of 1, suggesting less sensitivity to market movements.**
+**Remark: The alphas tell us the stocks underperformed compared to what the market model expected, the returns didn't justify the risk. Betas are less than the baseline of 1, suggesting less sensitivity to market wide fluctuations. A low Rsquared value stock's return variability is not market dependent.**  
