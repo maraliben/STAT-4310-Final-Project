@@ -3,9 +3,9 @@ title: "Final Project RMD"
 author: "Marali Benitez, Youcef Djoudi, Kelly Thackery, Samina Issa, Samira Bechi"
 date: "2025-04-09"
 output:
+  word_document: default
   html_document:
     df_print: paged
-  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -301,8 +301,9 @@ DoorDash: beta(1.69), P/E(627.07), Growth Estimate(31.84%), Industry: Communicat
 
 ##### (a)Plot close prices on three different plots. Notice the general "trend" and "variation" on different spans.
 
-```{r, warning=FALSE}
+```{r,echo=FALSE,warning=FALSE}
 #Plot close stock prices on different plots.
+par(mfrow=c(2, 1))
 plot(DIS.close, main = "Disney Closing Prices", type = "l", col = "blue", xlab = "Date", ylab = "Price")
 plot(NVDA.close, main = "NVIDIA Closing Prices", type = "l", col = "red", xlab = "Date", ylab = "Price")
 plot(CVNA.close, main = "Carvana Closing Prices", type = "l", col = "green", xlab = "Date", ylab = "Price")
@@ -312,7 +313,7 @@ plot(DASH.close, main = "DoorDash Closing Prices", type = "l", col = "purple", x
 
 **Remark: The closing prices for Disney, Carvana, Spotify and Doordash show a decline in 2022. Carvana doesn't have much variation through 2023. Spotify shows an increase with slight variation in 2023. Disney and Doordash both show variation in 2023. The closing price for NVIDIA rises until the end of 2021 then falls until it starts to rise again toward the end of 2022.**
 
-##### (b) Calculate annualized average return and annualized risk. Present the correlations matrix.
+##### (b) Calculate annualized average return and annualized risk. 
 
 ```{r, warning=FALSE}
 library(PerformanceAnalytics)
@@ -338,19 +339,38 @@ cat('Carvana:', cvna, '\n')
 cat('Spoify:', spot, '\n')
 cat('DoorDash:', dash, '\n')
 
+## Plot each stock prices on the same (𝜎−𝜇) planes
+risk <- c(dis[2], nvda[2], cvna[2], spot[2], dash[2])
+return <- c(dis[1], nvda[1], cvna[1], spot[1], dash[1])
+stocks <- c("Disney", "NVIDIA", "Carvana", "Spotify", "DoorDash")
 
-## Correlation Matrix
-returns <- cbind(DIS.return,NVDA.return,CVNA.return,SPOT.return,DASH.return)
-colnames(returns) <- c('Disney', 'NVIDIA', 'Carvana', 'Spotify','DoorDash')
-head(returns)
-chart.Correlation(returns)
+plot(risk, return, main = "Risk vs Return", xlab = "Annualized Risk (σ)", ylab = "Annualized Return (μ)", pch = 19, col = c("blue", "red", "green","magenta","purple"),xlim = c(min(risk) - 0.1, max(risk) + 0.1), ylim = c(min(return) - 0.1, max(return) + 0.1))
+points(stocks)
+text(risk, return, labels = stocks, pos = 4)
+
+
 ```
 
 **Remark: Disney has a -18.1% return with a 29.9% risk.\
 NVIDIA has a 58.3% return with a 53% risk.\
 Carvana has a 31.3% return with a 129.6% risk.\
 Spoify has a -3.4% return with a 51.7% risk.\
-DoorDash has a 10.9% return with a 67.1% risk. From the correlation coefficients we can see these companies generally move in the same direction. The Spotify-Doordash scatter plot shows a tight upward trend, indicating a strong positive correlation between the two.**
+DoorDash has a 10.9% return with a 67.1% risk.**  
+**The risk-return plot shows that NVIDIA has the highest return and risk, while Disney has the lowest return and risk. Carvana has a high return but also a very high risk. Spotify and DoorDash have moderate returns and risks.**  
+
+##### Present the correlations matrix.
+
+```{r}
+## Correlation Matrix
+returns <- cbind(DIS.return,NVDA.return,CVNA.return,SPOT.return,DASH.return)
+colnames(returns) <- c('Disney', 'NVIDIA', 'Carvana', 'Spotify','DoorDash')
+head(returns)
+chart.Correlation(returns)
+
+```
+
+
+**Remark: From the correlation coefficients we can see these companies generally move in the same direction. The Spotify-Doordash scatter plot shows a tight upward trend, indicating a strong positive correlation between the two.**
 
 ##### (c)Plot cumulative returns on one common plot.
 
@@ -372,7 +392,7 @@ chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
 
 ```
 
-**Remark: NVIDIA shows a significant upward trend, indicating strong growth. Disney, Carvana, Spotify, and DoorDash have more moderate growth.**
+**Remark: The SP500 index shows a steady upward trend, indicating overall market growth. The other stocks have varying degrees of performance compared to the SP500. NVIDIA outperformed the SP500, while Disney and Carvana underperformed. Spotify and DoorDash had similar performance to the SP500.**
 
 ##### (d)Estimate alpha, beta, Rsquare.
 
@@ -380,11 +400,11 @@ chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
 
 ##Riskfree rates 
 rf <- read.csv("F-F_Research_Data_Factors_daily.CSV", head=T, skip=3) # a data frame
-head(rf)
+#head(rf)
 rf$dates <- as.Date(rf$X, format="%Y%m%d") # create dates as X in the fama.french
 ## sort ff according to dates 
 rf.new <- rf[rf$dates >= "2021-01-01" & rf$dates<= "2024-01-01", ] 
-head(rf.new)
+#head(rf.new)
 rf.new <- rf.new[ -754, ]
 
 
@@ -413,4 +433,4 @@ results_table <- rbind(Disney  = res_DIS, NVIDIA  = res_NVDA, Carvana = res_CVNA
 print(results_table)
 ```
 
-**Remark: The alphas tell us the stocks underperformed compared to what the market model expected, the returns didn't justify the risk. Betas are less than the baseline of 1, suggesting less sensitivity to market wide fluctuations. A low Rsquared value stock's return variability is not market dependent.**  
+**Remark: The alphas tell us the stocks underperformed compared to what the market model expected, the returns didn't justify the risk. Betas are less than the baseline of 1, suggesting less sensitivity to market wide fluctuations. A low Rsquared value shows that a stock's return variability is not market dependent.**  
