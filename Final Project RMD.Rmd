@@ -3,9 +3,9 @@ title: "Final Project RMD"
 author: "Marali Benitez, Youcef Djoudi, Kelly Thackery, Samina Issa, Samira Bechi"
 date: "2025-04-09"
 output:
-  word_document: default
   html_document:
     df_print: paged
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
