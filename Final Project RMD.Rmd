@@ -377,9 +377,8 @@ chart.Correlation(returns)
 ```{r, warning=FALSE}
 ## SP500(Benchmark)
 SP500<- getSymbols("^GSPC", from=start, to=end, auto.assign = FALSE)
-SP500.close <- SP500[ , 5]
+SP500.close <- SP500[ , 4]
 SP500.return<- dailyReturn(SP500.close)
-
 ## Combine all returns into one data frame
 returns <- cbind(DIS.return, NVDA.return, CVNA.return, SPOT.return, DASH.return, SP500.return)
 colnames(returns) <- c('Disney', 'NVIDIA', 'Carvana', 'Spotify', 'DoorDash', 'SP500')
@@ -387,12 +386,12 @@ colnames(returns) <- c('Disney', 'NVIDIA', 'Carvana', 'Spotify', 'DoorDash', 'SP
 
 ## Plot cumulative returns using chart.CumReturns from PerformanceAnalytics
 library(PerformanceAnalytics)
-chart.CumReturns(returns, wealth.index = TRUE, legend.loc = 'topleft',
+chart.CumReturns(returns, wealth.index = FALSE, legend.loc = 'topleft',
                  main = 'Cumulative Returns', colorset=c('blue','red','green','magenta','purple','black'))
 
 ```
 
-**Remark: The SP500 index shows a steady upward trend, indicating overall market growth. The other stocks have varying degrees of performance compared to the SP500. NVIDIA outperformed the SP500, while Disney and Carvana underperformed. Spotify and DoorDash had similar performance to the SP500.**
+**Remark: The SP500 index shows a steady benchmark. The other stocks have varying degrees of performance compared to the SP500. NVIDIA outperformed the SP500, while Disney, Carvana, Spotify, and DoorDash underperformed compared to the SP500.**  
 
 ##### (d)Estimate alpha, beta, Rsquare.
 
@@ -433,4 +432,4 @@ results_table <- rbind(Disney  = res_DIS, NVIDIA  = res_NVDA, Carvana = res_CVNA
 print(results_table)
 ```
 
-**Remark: The alphas tell us the stocks underperformed compared to what the market model expected, the returns didn't justify the risk. Betas are less than the baseline of 1, suggesting less sensitivity to market wide fluctuations. A low Rsquared value shows that a stock's return variability is not market dependent.**  
+**Remark: The alphas tell us the stocks underperformed compared to what the market model expected, the returns didn't justify the risk. Betas are greater than the baseline of 1, suggesting more sensitivity to market wide fluctuations. A high Rsquared value shows that a stock's return variability is market dependent.**  
