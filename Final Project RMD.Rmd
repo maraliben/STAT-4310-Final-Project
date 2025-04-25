@@ -301,7 +301,7 @@ DoorDash: beta(1.69), P/E(627.07), Growth Estimate(31.84%), Industry: Communicat
 
 ##### (a)Plot close prices on three different plots. Notice the general "trend" and "variation" on different spans.
 
-```{r,echo=FALSE,warning=FALSE}
+```{r,warning=FALSE}
 #Plot close stock prices on different plots.
 par(mfrow=c(2, 1))
 plot(DIS.close, main = "Disney Closing Prices", type = "l", col = "blue", xlab = "Date", ylab = "Price")
